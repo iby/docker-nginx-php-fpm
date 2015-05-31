@@ -1,0 +1,4 @@
+.dockerignore
+circle.yml
+configuration/nginx.conf.sample
+README.md
