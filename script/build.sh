@@ -4,11 +4,6 @@ cd $(dirname $0)
 
 # Install apk packages and remove apk cache when finished.
 
-cat <<-EOL > /etc/apt/sources.list.d/nginx.list
-	deb http://nginx.org/packages/debian/ jessie nginx
-	deb-src http://nginx.org/packages/debian/ jessie nginx
-EOL
-
 apt-get update
 apt-get install --no-install-recommends --yes -t sid \
     imagemagick \
@@ -17,6 +12,7 @@ apt-get install --no-install-recommends --yes -t sid \
     php5-imagick \
     php5-mcrypt \
     php5-mongo \
+    php5-pgsql \
     supervisor
 
 rm -rf \

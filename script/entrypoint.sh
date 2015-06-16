@@ -2,15 +2,21 @@
 
 cd $(dirname $0)
 
+# If we have the `configure.sh` script execute it to configure the container prior starting it.
+
+if [ -f 'configure.sh' ]; then
+    echo 'Found the configuration script, running it now.'
+    ./configure.sh
+fi
+
+# Start the supervisor if the command is `nginx-php-fpm`.
+
 if [ "$1" = 'nginx-php-fpm' ]; then
 
-    # If we have a custom confiuration we should use it when starting nginx, otherwise use the default one. Here
-    # we update the supervisord configuration with the custom parameter.
+    # Override the default nginx configuration if the custom one is provided.
 
     if [ -f '../configuration/nginx.conf' ]; then
-        sed -i -e 's~\(command=nginx\).*$~\1 -c '"'"$(pwd)'/../configuration/nginx.conf'"'"'~g' '../configuration/supervisord/nginx.conf'
-    else
-        sed -i -e 's/\(command=nginx\).*$/\1/g' '../configuration/supervisord/nginx.conf'
+        cp '../configuration/nginx.conf' '/etc/nginx/nginx.conf'
     fi
 
     supervisord --nodaemon --configuration="../configuration/supervisord.conf"
