@@ -8,6 +8,7 @@ apt-get update
 apt-get install --no-install-recommends --yes -t sid \
     imagemagick \
     nginx \
+    php5-curl \
     php5-fpm \
     php5-imagick \
     php5-mcrypt \
