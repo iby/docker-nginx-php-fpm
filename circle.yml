@@ -2,41 +2,16 @@ machine:
   services:
     - docker
 
+dependencies:
+  override:
+    - ./build/ci/script/build.sh
+
 test:
   override:
-
-    # Create index.php that will output the `phpinfo()`.
-
-    - docker build -t ianbytchek/nginx-php-fpm .
-    - |
-      mkdir src
-      cat <<-EOL > src/index.php
-      	<?php
-
-      	phpinfo();
-      EOL
-      cp configuration/nginx.conf.sample configuration/nginx.conf
-      sed -i \
-        -e 's/root \/var\/www/root \/docker\/src/g' \
-        configuration/nginx.conf
-      cat configuration/nginx.conf
-    - |
-      docker run -d -p 80:80 \
-        -v $(pwd)/configuration:/docker/configuration \
-        -v $(pwd)/src:/docker/src \
-        --name nginx-php-fpm \
-        ianbytchek/nginx-php-fpm; \
-      sleep 5
-    - curl --retry 10 --retry-delay 5 -v http://localhost:80
-    - docker logs nginx-php-fpm
+    - ./build/ci/script/test.sh
 
 deployment:
   hub:
     branch: debian
     commands:
-
-      # Authenticate with docker and push the latest image.
-
-      - docker login -e $DOCKER_HUB_EMAIL -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
-      - docker tag ianbytchek/nginx-php-fpm:latest ianbytchek/nginx-php-fpm:debian-sid
-      - docker push ianbytchek/nginx-php-fpm:debian-sid
+      - ./build/ci/script/deploy.sh
