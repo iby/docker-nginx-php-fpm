@@ -8,6 +8,7 @@ echo -n 'Updating and installing dependencies…'
 
 apt-get update > /dev/null
 apt-get install --no-install-recommends --target-release 'sid' --yes \
+    ca-certificates \
     imagemagick \
     nginx \
     php5-curl \
@@ -25,11 +26,11 @@ echo ' OK!'
 echo -n 'Setting up image…'
 
 mv './entrypoint.sh' '/'
-cp '../configuration/nginx/nginx.conf' '/etc/nginx/nginx.conf'
-cp '../configuration/php/php-fpm.conf' '/etc/php5/fpm/php-fpm.conf'
-cp '../configuration/php/php.ini' '/etc/php5/cli/php.ini'
-cp '../configuration/php/php.ini' '/etc/php5/fpm/php.ini'
-cp '../configuration/supervisor/'* '/etc/supervisor/conf.d'
+cp -ar '../configuration/nginx/nginx.conf' '/etc/nginx/nginx.conf'
+cp -ar '../configuration/php/php-fpm.conf' '/etc/php5/fpm/php-fpm.conf'
+cp -ar '../configuration/php/php.ini' '/etc/php5/cli/php.ini'
+cp -ar '../configuration/php/php.ini' '/etc/php5/fpm/php.ini'
+cp -ar '../configuration/supervisor/'* '/etc/supervisor/conf.d'
 
 [ -d '/var/log/nginx' ] || mkdir --parents '/var/log/nginx'
 [ -d '/var/log/php' ] || mkdir --parents '/var/log/php'
